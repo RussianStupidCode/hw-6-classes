@@ -11,21 +11,28 @@ class Lecturer(Mentor):
         super().add_course(course)
         self.lectures[course] = [lecture]
 
-    def get_average_grade(self, course=None):
-        if len(self.grades.keys()) == 0:
-            return 0
-
+    def get_grade_sum(self, course=None):
         grades_sum = 0
-        grades_count = 0
-
         if course is None:
             for grades in self.grades.values():
                 grades_sum += sum(sum(grade) for grade in grades.values())
-                grades_count += sum(len(grade) for grade in grades.values())
         else:
             grades_sum = sum(sum(grade) for grade in self.grades[course].values())
+        return grades_sum
+
+    def get_grade_count(self, course=None):
+        grades_count = 0
+        if course is None:
+            for grades in self.grades.values():
+                grades_count += sum(len(grade) for grade in grades.values())
+        else:
             grades_count = sum(len(grade) for grade in self.grades[course].values())
-        return grades_sum / grades_count
+        return grades_count
+
+    def get_average_grade(self, course=None):
+        if len(self.grades.keys()) == 0:
+            return 0
+        return self.get_grade_sum() / self.get_grade_count()
 
     def is_lecture_exist(self, lecture, course):
         if course not in self.lectures or lecture not in self.lectures[course]:

@@ -18,15 +18,27 @@ class Student(Person):
             self.courses_in_progress.remove(course)
         self.finished_courses.append(course)
 
-    def get_average_grade(self, course=None):
+    def get_grade_sum(self, course=None):
         if len(self.grades.keys()) == 0:
             return 0
 
         if course is None:
-            grades_count = sum(len(grade) for grade in self.grades.values())
-            grades_sum = sum(sum(grade) for grade in self.grades.values())
-            return grades_sum/grades_count
-        return sum(self.grades[course]) / len(self.grades[course])
+            return sum(sum(grade) for grade in self.grades.values())
+        return sum(self.grades[course])
+
+    def get_grade_count(self, course=None):
+        if len(self.grades.keys()) == 0:
+            return 0
+
+        if course is None:
+            return sum(len(grade) for grade in self.grades.values())
+        return len(self.grades[course])
+
+    def get_average_grade(self, course=None):
+        if len(self.grades.keys()) == 0:
+            return 0
+
+        return self.get_grade_sum() / self.get_grade_count()
 
     def is_course_available(self, course):
         return course in self.courses_in_progress
